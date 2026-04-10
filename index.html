@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ISOM Data Lab @ Perdue School of Business</title>
+  <style>
+    :root {
+      /* Salisbury University Official Colors: Maroon & Gold */
+      --maroon:       #6B1A2A;
+      --maroon-light: #852236;
+      --maroon-dark:  #4E1120;
+      --gold:         #C9A434;
+      --gold-light:   #DDB84A;
+      --gold-pale:    #FDF5DC;
+      --accent:       #8B6020;   /* deep gold / bronze accent */
+      --accent-light: #F9EFD5;
+      --bg:           #FBF5F6;   /* subtle maroon-tinted background */
+      --white:        #ffffff;
+      --text:         #2c2020;
+      --text-muted:   #7a6060;
+      --border:       #e8d8da;
+      --success:      #2e7d32;
+      --radius:       12px;
+      --shadow:       0 4px 20px rgba(107,26,42,0.12);
+      --shadow-sm:    0 2px 8px rgba(107,26,42,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); }
+
+    /* NAV */
+    nav {
+      background: var(--maroon);
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-logo {
+      width: 36px; height: 36px; background: var(--gold);
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; color: var(--maroon); font-size: 16px;
+    }
+    .nav-brand-text { color: white; font-weight: 700; font-size: 16px; letter-spacing: 0.3px; line-height: 1.2; }
+    .nav-brand-text .sub { font-size: 11px; color: var(--gold-light); font-weight: 500; display: block; letter-spacing: 0.2px; }
+    .nav-links { display: flex; gap: 6px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.82); text-decoration: none;
+      padding: 8px 16px; border-radius: 8px; font-size: 14px;
+      font-weight: 500; transition: all 0.2s; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.13); color: white; }
+    .nav-cta {
+      background: var(--gold); color: var(--maroon) !important;
+      font-weight: 700 !important; padding: 8px 18px !important;
+    }
+    .nav-cta:hover { background: var(--gold-light) !important; }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--maroon-dark) 0%, var(--maroon) 55%, var(--maroon-light) 100%);
+      color: white; padding: 90px 40px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(201,164,52,0.20) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -80px; left: 15%;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(201,164,52,0.10) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-inner { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; text-align: center; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(201,164,52,0.18); color: var(--gold-light);
+      border: 1px solid rgba(201,164,52,0.38);
+      padding: 5px 18px; border-radius: 20px; font-size: 13px;
+      font-weight: 600; letter-spacing: 0.5px; margin-bottom: 20px;
+    }
+    .hero h1 { font-size: 50px; font-weight: 800; line-height: 1.1; margin-bottom: 18px; }
+    .hero h1 span { color: var(--gold-light); }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.82); line-height: 1.65; margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 13px 28px; border-radius: 9px; font-size: 15px;
+      font-weight: 700; cursor: pointer; border: none;
+      transition: all 0.2s; text-decoration: none; display: inline-block;
+    }
+    .btn-gold { background: var(--gold); color: var(--maroon); }
+    .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,164,52,0.45); }
+    .btn-outline { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.45); }
+    .btn-outline:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.72); }
+    .btn-maroon { background: var(--maroon); color: white; }
+    .btn-maroon:hover { background: var(--maroon-light); }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-accent:hover { background: #7a5318; transform: translateY(-1px); }
+
+    /* SUPPORTER PORTAL NAV BUTTON */
+    .nav-portal-btn {
+      border: 1.5px solid rgba(201,164,52,0.55) !important;
+      color: var(--gold-light) !important;
+    }
+    .nav-portal-btn:hover { border-color: var(--gold-light) !important; background: rgba(201,164,52,0.12) !important; }
+    .nav-dashboard-btn { background: var(--gold) !important; color: var(--maroon) !important; }
+    .nav-dashboard-btn:hover { background: var(--gold-light) !important; }
+    .nav-logout-btn { color: rgba(255,255,255,0.65) !important; font-size: 13px !important; }
+    .nav-logout-btn:hover { color: white !important; background: rgba(255,255,255,0.10) !important; }
+
+    /* SUPPORTER LOGIN MODAL */
+    .login-modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(40,10,15,0.60); z-index: 1000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    .login-modal-overlay.open { display: flex; }
+    .login-modal {
+      background: white; border-radius: 16px;
+      width: 90%; max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      animation: modalIn 0.25s ease; overflow: hidden;
+    }
+    .login-header {
+      background: linear-gradient(135deg, var(--maroon-dark), var(--maroon));
+      color: white; padding: 24px 28px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .login-header h2 { font-size: 19px; font-weight: 800; }
+    .login-header p  { font-size: 13px; color: rgba(255,255,255,0.70); margin-top: 4px; }
+    .login-body { padding: 28px; }
+    .login-body .form-group { margin-bottom: 16px; }
+    .login-error {
+      background: #fce8e8; color: #c0392b; border-radius: 8px;
+      padding: 10px 14px; font-size: 13px; font-weight: 600;
+      margin-bottom: 14px; display: none;
+    }
+    .login-error.show { display: block; }
+    .btn-login {
+      width: 100%; padding: 12px; border-radius: 9px;
+      background: var(--maroon); color: white; border: none;
+      font-weight: 800; font-size: 15px; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-login:hover { background: var(--maroon-light); }
+    .login-hint {
+      margin-top: 14px; font-size: 12px; color: var(--text-muted);
+      text-align: center; line-height: 1.6;
+    }
+
+    /* SUPPORTER DASHBOARD */
+    .dashboard-header {
+      background: linear-gradient(135deg, var(--maroon-dark), var(--maroon));
+      color: white; padding: 40px 40px 36px;
+    }
+    .dashboard-header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+    .dashboard-avatar {
+      width: 64px; height: 64px; border-radius: 14px;
+      background: rgba(255,255,255,0.15); font-size: 28px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      border: 2px solid rgba(201,164,52,0.55);
+    }
+    .dashboard-title h1 { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+    .dashboard-title p  { font-size: 14px; color: rgba(255,255,255,0.72); }
+    .dashboard-body { max-width: 1100px; margin: 0 auto; padding: 36px 40px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 28px; }
+    .dash-card {
+      background: white; border-radius: var(--radius);
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden;
+    }
+    .dash-card-header {
+      background: var(--maroon); color: white;
+      padding: 14px 20px; font-size: 14px; font-weight: 700;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .dash-card-body { padding: 20px; }
+    .profile-preview { }
+    .profile-preview .supporter-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+    .profile-preview .avail-row { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+    .dash-appt-list { display: flex; flex-direction: column; gap: 12px; }
+    .dash-appt-item {
+      padding: 14px 16px; border-radius: 9px;
+      border: 1px solid var(--border); background: var(--bg);
+    }
+    .dash-appt-supporter { font-size: 14px; font-weight: 700; color: var(--maroon); margin-bottom: 4px; }
+    .dash-appt-meta { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+    .dash-appt-status { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; display: inline-block; margin-top: 4px; }
+    .dash-appt-status.confirmed { background: #e8f5ee; color: var(--success); }
+    .dash-appt-status.cancelled  { background: #fce8e8; color: #c0392b; }
+    .dash-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); font-size: 13px; }
+    .dash-empty .dash-empty-icon { font-size: 36px; margin-bottom: 8px; }
+
+    /* SU STRIPE */
+    .su-stripe {
+      background: var(--gold); height: 4px;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 22px 40px;
+      display: flex; justify-content: center; gap: 60px; flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--maroon); }
+    .stat-num span { color: var(--gold); }
+    .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+    /* SECTION */
+    .section { padding: 64px 40px; max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 44px; }
+    .section-header h2 { font-size: 32px; font-weight: 800; color: var(--maroon); margin-bottom: 10px; }
+    .section-header p { color: var(--text-muted); font-size: 16px; max-width: 540px; margin: 0 auto; line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .step {
+      background: white; border-radius: var(--radius);
+      padding: 32px 26px; text-align: center;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .step:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .step-num {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--maroon), var(--maroon-light));
+      color: white; font-size: 20px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .step h3 { font-size: 17px; font-weight: 700; color: var(--maroon); margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    /* TOPICS */
+    .topics-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 18px; }
+    .topic-card {
+      background: white; border-radius: var(--radius);
+      padding: 26px 20px; text-align: center;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .topic-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--gold); }
+    .topic-icon { font-size: 36px; margin-bottom: 12px; }
+    .topic-card h3 { font-size: 15px; font-weight: 700; color: var(--maroon); margin-bottom: 6px; }
+    .topic-card p { font-size: 13px; color: var(--text-muted); }
+    .topic-badge { display: inline-block; background: var(--gold-pale); color: var(--accent); font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 10px; margin-top: 8px; }
+
+    /* SUPPORTER PAGE HEADER */
+    .page-header {
+      background: linear-gradient(135deg, var(--maroon-dark) 0%, var(--maroon) 100%);
+      color: white; padding: 48px 40px 40px;
+    }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; }
+    .page-header h1 { font-size: 36px; font-weight: 800; margin-bottom: 8px; }
+    .page-header p { color: rgba(255,255,255,0.75); font-size: 16px; }
+
+    /* FILTERS */
+    .filters {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 18px 40px; display: flex; gap: 10px; flex-wrap: wrap;
+      align-items: center; position: sticky; top: 64px; z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    .filter-label { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-right: 4px; }
+    .filter-btn {
+      padding: 7px 16px; border-radius: 20px; font-size: 13px;
+      font-weight: 600; border: 1.5px solid var(--border);
+      background: white; cursor: pointer; transition: all 0.2s; color: var(--text);
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--maroon); color: white; border-color: var(--maroon); }
+    .filter-btn.tag-excel.active  { background: #27ae60; border-color: #27ae60; }
+    .filter-btn.tag-python.active { background: #3776ab; border-color: #3776ab; }
+    .filter-btn.tag-r.active      { background: #276DC3; border-color: #276DC3; }
+    .filter-btn.tag-stata.active  { background: #b05000; border-color: #b05000; }
+    .filter-btn.tag-viz.active    { background: var(--accent); border-color: var(--accent); }
+
+    /* SUPPORTER CARDS */
+    .supporters-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 22px; padding: 36px 40px; max-width: 1100px; margin: 0 auto;
+    }
+    .supporter-card {
+      background: white; border-radius: var(--radius);
+      padding: 26px 24px; box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border); cursor: pointer;
+      transition: all 0.2s;
+    }
+    .supporter-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--gold); }
+    .supporter-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+    .avatar {
+      width: 56px; height: 56px; border-radius: 12px;
+      font-size: 22px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-weight: 700;
+    }
+    .avatar-faculty { background: linear-gradient(135deg, var(--maroon-dark), var(--maroon-light)); color: white; }
+    .avatar-senior  { background: linear-gradient(135deg, var(--accent), var(--gold)); color: white; }
+    .supporter-name { font-size: 16px; font-weight: 700; color: var(--maroon); }
+    .supporter-role {
+      font-size: 12px; font-weight: 600; margin-top: 3px;
+      padding: 2px 9px; border-radius: 10px; display: inline-block;
+    }
+    .role-faculty { background: #f5e8eb; color: var(--maroon); }
+    .role-senior  { background: var(--gold-pale); color: var(--accent); }
+    .supporter-bio { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-bottom: 14px; }
+    .supporter-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .tag {
+      font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: 10px; letter-spacing: 0.3px;
+    }
+    .tag-excel  { background: #e8f8f0; color: #1e7e4a; }
+    .tag-python { background: #e8f0ff; color: #2557a0; }
+    .tag-r      { background: #e0e8ff; color: #1e3f9a; }
+    .tag-stata  { background: #fff3e0; color: #b05000; }
+    .tag-viz    { background: var(--gold-pale); color: var(--accent); }
+    .tag-ml     { background: #f5e8eb; color: var(--maroon); }
+    .availability-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .avail-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+    .availability-text { font-size: 12px; color: var(--text-muted); }
+    .availability-text strong { color: var(--success); }
+    .btn-book {
+      width: 100%; padding: 10px; border-radius: 8px;
+      background: var(--maroon); color: white; font-weight: 700;
+      font-size: 14px; border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-book:hover { background: var(--gold); color: var(--maroon); }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(40,10,15,0.60); z-index: 1000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white; border-radius: 16px;
+      width: 90%; max-width: 560px; max-height: 90vh;
+      overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: none; } }
+    .modal-header {
+      background: linear-gradient(135deg, var(--maroon-dark), var(--maroon));
+      color: white; padding: 24px 28px; border-radius: 16px 16px 0 0;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .modal-header h2 { font-size: 20px; font-weight: 800; }
+    .modal-header p { font-size: 13px; color: rgba(255,255,255,0.72); margin-top: 4px; }
+    .modal-header-gold { width: 100%; height: 3px; background: var(--gold); margin-top: 14px; border-radius: 2px; }
+    .modal-close {
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      width: 30px; height: 30px; border-radius: 6px; cursor: pointer;
+      font-size: 16px; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.28); }
+    .modal-body { padding: 28px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 13px; font-weight: 700; color: var(--maroon); margin-bottom: 6px; }
+    input, select, textarea {
+      width: 100%; padding: 11px 14px; border-radius: 8px;
+      border: 1.5px solid var(--border); font-size: 14px;
+      color: var(--text); background: white; outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+    textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .time-slots { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .time-slot {
+      padding: 8px 6px; border-radius: 8px; border: 1.5px solid var(--border);
+      text-align: center; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; color: var(--text);
+    }
+    .time-slot:hover, .time-slot.selected { background: var(--maroon); color: white; border-color: var(--maroon); }
+    .time-slot.unavailable { background: #f0f0f0; color: #aaa; cursor: not-allowed; text-decoration: line-through; }
+    .modal-footer {
+      padding: 0 28px 28px;
+      display: flex; gap: 12px; justify-content: flex-end;
+    }
+    .btn-cancel {
+      padding: 11px 22px; border-radius: 8px;
+      background: var(--bg); color: var(--text-muted);
+      border: 1.5px solid var(--border); cursor: pointer;
+      font-weight: 600; font-size: 14px;
+    }
+    .btn-confirm {
+      padding: 11px 24px; border-radius: 8px;
+      background: var(--gold); color: var(--maroon);
+      border: none; cursor: pointer; font-weight: 800; font-size: 14px;
+      transition: all 0.2s;
+    }
+    .btn-confirm:hover { background: var(--gold-light); }
+
+    /* SUCCESS */
+    .success-card { text-align: center; padding: 40px 28px; }
+    .success-icon { font-size: 56px; margin-bottom: 14px; }
+    .success-card h3 { font-size: 22px; font-weight: 800; color: var(--maroon); margin-bottom: 8px; }
+    .success-card p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+
+    /* JOIN PAGE */
+    .join-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 36px; padding: 48px 40px; max-width: 1000px; margin: 0 auto; }
+    .join-info h2 { font-size: 28px; font-weight: 800; color: var(--maroon); margin-bottom: 14px; }
+    .join-info p { font-size: 15px; color: var(--text-muted); line-height: 1.65; margin-bottom: 20px; }
+    .perks { display: flex; flex-direction: column; gap: 14px; }
+    .perk { display: flex; gap: 12px; align-items: flex-start; }
+    .perk-icon { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+    .perk-text strong { display: block; font-size: 14px; color: var(--maroon); font-weight: 700; }
+    .perk-text span { font-size: 13px; color: var(--text-muted); }
+    .join-form {
+      background: white; border-radius: var(--radius);
+      padding: 32px; box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--maroon);
+    }
+    .join-form h3 { font-size: 20px; font-weight: 800; color: var(--maroon); margin-bottom: 22px; }
+    .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+    .checkbox-item input[type=checkbox] { width: auto; cursor: pointer; accent-color: var(--maroon); }
+    .day-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
+    .day-btn {
+      padding: 7px 4px; border-radius: 7px; border: 1.5px solid var(--border);
+      text-align: center; font-size: 12px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; background: white; color: var(--text);
+    }
+    .day-btn:hover, .day-btn.active { background: var(--maroon); color: white; border-color: var(--maroon); }
+    .submit-btn {
+      width: 100%; padding: 14px; border-radius: 9px;
+      background: var(--gold); color: var(--maroon);
+      border: none; cursor: pointer; font-weight: 800; font-size: 16px;
+      transition: all 0.2s; margin-top: 8px;
+    }
+    .submit-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ABOUT PAGE */
+    .about-hero {
+      background: linear-gradient(135deg, var(--maroon-dark), var(--maroon));
+      color: white; padding: 56px 40px;
+    }
+    .about-hero-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .about-hero h1 { font-size: 38px; font-weight: 800; margin-bottom: 14px; }
+    .about-hero p { font-size: 17px; color: rgba(255,255,255,0.78); line-height: 1.68; }
+    .mission-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .mission-card {
+      background: white; border-radius: var(--radius);
+      padding: 30px 24px; text-align: center;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+    }
+    .mission-icon { font-size: 40px; margin-bottom: 14px; }
+    .mission-card h3 { font-size: 17px; font-weight: 800; color: var(--maroon); margin-bottom: 8px; }
+    .mission-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+    .team-card {
+      background: white; border-radius: var(--radius);
+      padding: 26px 22px; text-align: center;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+    }
+    .team-avatar {
+      width: 70px; height: 70px; border-radius: 14px;
+      font-size: 28px; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .team-card h4 { font-size: 16px; font-weight: 700; color: var(--maroon); }
+    .team-card .team-role { font-size: 13px; color: var(--accent); font-weight: 600; margin: 4px 0 8px; }
+    .team-card p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* MY BOOKINGS PAGE */
+    .bookings-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .bookings-empty .empty-icon { font-size: 52px; margin-bottom: 14px; }
+    .bookings-empty p { font-size: 15px; margin-bottom: 20px; }
+    .bookings-list { display: flex; flex-direction: column; gap: 16px; max-width: 700px; margin: 0 auto; padding: 36px 40px; }
+    .booking-item {
+      background: white; border-radius: var(--radius);
+      padding: 20px 22px; box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+    }
+    .booking-info { flex: 1; }
+    .booking-supporter { font-size: 15px; font-weight: 700; color: var(--maroon); margin-bottom: 4px; }
+    .booking-meta { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+    .booking-meta span { display: inline-block; margin-right: 14px; }
+    .booking-status {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 9px; border-radius: 10px; margin-top: 6px;
+      background: #e8f5ee; color: var(--success);
+    }
+    .booking-status.cancelled { background: #fce8e8; color: #c0392b; }
+    .btn-withdraw {
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;
+      background: white; color: #c0392b; border: 1.5px solid #e8b0b0;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-withdraw:hover { background: #fce8e8; border-color: #c0392b; }
+    .btn-withdraw:disabled { opacity: 0.4; cursor: not-allowed; background: white; }
+    .booking-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--maroon); color: white; font-size: 11px;
+      font-weight: 700; padding: 2px 9px; border-radius: 10px;
+      cursor: pointer; margin-left: 8px; vertical-align: middle;
+    }
+
+    /* REMOVE LISTING */
+    .btn-remove-listing {
+      width: 100%; padding: 7px; border-radius: 7px; margin-top: 8px;
+      background: white; color: #b05050; border: 1.5px solid #e8c0c0;
+      font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-remove-listing:hover { background: #fce8e8; border-color: #c0392b; color: #c0392b; }
+
+    /* CONFIRM DIALOG */
+    .confirm-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(40,10,15,0.55); z-index: 2000;
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+    .confirm-overlay.open { display: flex; }
+    .confirm-box {
+      background: white; border-radius: 14px; padding: 32px 28px;
+      max-width: 400px; width: 90%; text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.22);
+      animation: modalIn 0.2s ease;
+    }
+    .confirm-box .confirm-icon { font-size: 44px; margin-bottom: 12px; }
+    .confirm-box h3 { font-size: 18px; font-weight: 800; color: var(--maroon); margin-bottom: 8px; }
+    .confirm-box p { font-size: 14px; color: var(--text-muted); line-height: 1.55; margin-bottom: 22px; }
+    .confirm-btns { display: flex; gap: 10px; justify-content: center; }
+    .btn-confirm-yes {
+      padding: 10px 24px; border-radius: 8px; font-weight: 700; font-size: 14px;
+      background: #c0392b; color: white; border: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-confirm-yes:hover { background: #a93226; }
+    .btn-confirm-no {
+      padding: 10px 22px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      background: var(--bg); color: var(--text-muted); border: 1.5px solid var(--border); cursor: pointer;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--maroon-dark); color: rgba(255,255,255,0.65);
+      text-align: center; padding: 28px 40px;
+      font-size: 13px; margin-top: 40px;
+    }
+    footer .footer-gold { color: var(--gold-light); font-weight: 700; }
+    footer a { color: var(--gold-light); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .supporters-grid, .steps, .mission-grid, .team-grid { grid-template-columns: repeat(2,1fr); }
+      .topics-grid { grid-template-columns: repeat(3,1fr); }
+      .join-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 36px; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .supporters-grid, .steps, .topics-grid, .mission-grid, .team-grid { grid-template-columns: 1fr; }
+      .topics-grid { grid-template-columns: repeat(2,1fr); }
+      .section { padding: 40px 16px; }
+      .hero { padding: 56px 16px 48px; }
+      .hero h1 { font-size: 28px; }
+      .stats-bar { gap: 30px; }
+      .form-row { grid-template-columns: 1fr; }
+      .time-slots { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand" onclick="showPage('home')">
+    <div class="nav-logo">D</div>
+    <div class="nav-brand-text">
+      ISOM Data Lab
+      <span class="sub">Perdue School of Business · Salisbury University</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a onclick="showPage('home')"       id="nav-home"       class="active">Home</a>
+    <a onclick="showPage('supporters')" id="nav-supporters">Find Support</a>
+    <a onclick="showPage('bookings')"   id="nav-bookings">📋 My Bookings <span id="navBookingCount" style="display:none;background:var(--gold);color:var(--maroon);border-radius:10px;padding:1px 7px;font-size:11px;font-weight:800;margin-left:2px;"></span></a>
+    <a onclick="showPage('about')"      id="nav-about">About</a>
+    <!-- shown when NOT logged in as supporter -->
+    <a onclick="openSupporterLogin()" id="nav-portal" class="nav-portal-btn">🔐 Supporter Portal</a>
+    <a onclick="showPage('join')"     id="nav-join"   class="nav-cta">Join as Supporter</a>
+    <!-- shown when logged in as supporter -->
+    <a onclick="showPage('dashboard')" id="nav-dashboard" style="display:none;" class="nav-cta nav-dashboard-btn">📊 My Dashboard</a>
+    <a onclick="logoutSupporter()"     id="nav-logout"    style="display:none;" class="nav-logout-btn">Sign Out</a>
+  </div>
+</nav>
+<div class="su-stripe"></div>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div id="page-home" class="page active">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🦅 Perdue School of Business · Salisbury University</div>
+      <h1>Your <span>Data Lab</span> for<br/>Coding Support</h1>
+      <p>Connect with Perdue faculty mentors and senior Sea Gulls for hands-on help with Excel, Python, R, Stata, and data visualization — free for all Salisbury University students.</p>
+      <div class="hero-btns">
+        <button class="btn btn-gold" onclick="showPage('supporters')">🔍 Find a Supporter</button>
+        <button class="btn btn-outline" onclick="showPage('join')">✋ Become a Supporter</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="facultyCount">—</div><div class="stat-label">Faculty Supporters</div></div>
+    <div class="stat"><div class="stat-num">5<span>+</span></div><div class="stat-label">Tools Covered</div></div>
+    <div class="stat"><div class="stat-num">100<span>%</span></div><div class="stat-label">Perdue School Faculty &amp; Elite Senior Students</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Getting coding help is simple — three steps from question to solution.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Browse Supporters</h3>
+        <p>Explore Perdue faculty and senior students by expertise — Python, R, Excel, Stata, or data visualization.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Book a Session</h3>
+        <p>Check real-time availability and book a 30 or 60-minute appointment that fits your schedule.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Get Help &amp; Grow</h3>
+        <p>Meet in person on campus or online, work through your problem, and build lasting analytics skills.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:white; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="section">
+      <div class="section-header">
+        <h2>Topics We Cover</h2>
+        <p>Our supporters specialize across the full data analytics toolkit in the Perdue School curriculum.</p>
+      </div>
+      <div class="topics-grid">
+        <div class="topic-card" onclick="filterAndShow('excel')">
+          <div class="topic-icon">📊</div>
+          <h3>Excel &amp; Spreadsheets</h3>
+          <p>Formulas, pivot tables, dashboards, data cleaning</p>
+          <div class="topic-badge">3 faculty</div>
+        </div>
+        <div class="topic-card" onclick="filterAndShow('python')">
+          <div class="topic-icon">🐍</div>
+          <h3>Python</h3>
+          <p>Pandas, NumPy, Matplotlib, scikit-learn</p>
+          <div class="topic-badge">3 faculty</div>
+        </div>
+        <div class="topic-card" onclick="filterAndShow('r')">
+          <div class="topic-icon">📈</div>
+          <h3>R</h3>
+          <p>tidyverse, ggplot2, regression, statistical modeling</p>
+          <div class="topic-badge">2 faculty</div>
+        </div>
+        <div class="topic-card" onclick="filterAndShow('stata')">
+          <div class="topic-icon">📉</div>
+          <h3>Stata</h3>
+          <p>Econometrics, causal inference, panel data</p>
+          <div class="topic-badge">2 faculty</div>
+        </div>
+        <div class="topic-card" onclick="filterAndShow('viz')">
+          <div class="topic-icon">🎨</div>
+          <h3>Data Visualization</h3>
+          <p>Tableau, Power BI, ggplot2, Seaborn</p>
+          <div class="topic-badge">2 faculty</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="text-align:center;">
+    <div class="section-header">
+      <h2>Ready to get started?</h2>
+      <p>Whether you need help or want to give back to the Sea Gull community — you're welcome here.</p>
+    </div>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-maroon" onclick="showPage('supporters')">🔍 Find a Supporter Now</button>
+      <button class="btn btn-accent"  onclick="showPage('join')">🎓 List Your Availability</button>
+    </div>
+  </div>
+
+</div><!-- end home -->
+
+
+<!-- ==================== SUPPORTERS PAGE ==================== -->
+<div id="page-supporters" class="page">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>Find a Supporter</h1>
+      <p>Browse available Perdue faculty and senior students. Book a free session in seconds.</p>
+    </div>
+  </div>
+
+  <div class="filters" id="filterBar">
+    <span class="filter-label">Filter by topic:</span>
+    <button class="filter-btn active"     onclick="filterSupporters('all', this)">All</button>
+    <button class="filter-btn tag-excel"  onclick="filterSupporters('excel', this)">📊 Excel</button>
+    <button class="filter-btn tag-python" onclick="filterSupporters('python', this)">🐍 Python</button>
+    <button class="filter-btn tag-r"      onclick="filterSupporters('r', this)">📈 R</button>
+    <button class="filter-btn tag-stata"  onclick="filterSupporters('stata', this)">📉 Stata</button>
+    <button class="filter-btn tag-viz"    onclick="filterSupporters('viz', this)">🎨 Visualization</button>
+  </div>
+
+  <div class="supporters-grid" id="supporterGrid"></div>
+</div>
+
+
+<!-- ==================== JOIN PAGE ==================== -->
+<div id="page-join" class="page">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>Become a Supporter</h1>
+      <p>Share your expertise with fellow Sea Gulls. Help the Perdue community thrive with data.</p>
+    </div>
+  </div>
+
+  <div class="join-grid">
+    <div class="join-info">
+      <h2>Why Join the Lab?</h2>
+      <p>ISOM Data Lab connects Perdue students with faculty and peer mentors in a collaborative analytics community. As a supporter, you set your own schedule and help at your own pace.</p>
+      <div class="perks">
+        <div class="perk">
+          <div class="perk-icon">📅</div>
+          <div class="perk-text"><strong>Full Flexibility</strong><span>You control your availability — list only the hours you're free.</span></div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">🏆</div>
+          <div class="perk-text"><strong>Perdue Recognition</strong><span>Earn a community badge on your profile and a co-curricular record.</span></div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">🤝</div>
+          <div class="perk-text"><strong>Grow Your Network</strong><span>Connect with students and faculty across the Perdue School.</span></div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">💡</div>
+          <div class="perk-text"><strong>Deepen Your Own Skills</strong><span>Teaching is the best way to solidify your knowledge in analytics.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="join-form" id="joinFormContainer">
+      <h3>Register as a Supporter</h3>
+      <form id="joinForm" onsubmit="submitJoin(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane" required />
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Salisbury University Email</label>
+          <input type="email" placeholder="jsmith@gulls.salisbury.edu" required />
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select required>
+            <option value="">Select your role…</option>
+            <option>Faculty / Instructor – Perdue School</option>
+            <option>PhD / Doctoral Student</option>
+            <option>Senior Undergraduate (3rd / 4th Year)</option>
+            <option>Graduate Student (MBA / MSc)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Areas of Expertise</label>
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" /> 📊 Excel / Spreadsheets</label>
+            <label class="checkbox-item"><input type="checkbox" /> 🐍 Python (Pandas, ML, etc.)</label>
+            <label class="checkbox-item"><input type="checkbox" /> 📈 R &amp; Stata</label>
+            <label class="checkbox-item"><input type="checkbox" /> 🎨 Data Visualization (Tableau, Power BI, ggplot2)</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Available Days</label>
+          <div class="day-grid">
+            <div class="day-btn" onclick="toggleDay(this)">Mon</div>
+            <div class="day-btn" onclick="toggleDay(this)">Tue</div>
+            <div class="day-btn" onclick="toggleDay(this)">Wed</div>
+            <div class="day-btn" onclick="toggleDay(this)">Thu</div>
+            <div class="day-btn" onclick="toggleDay(this)">Fri</div>
+            <div class="day-btn" onclick="toggleDay(this)">Sat</div>
+            <div class="day-btn" onclick="toggleDay(this)">Sun</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Earliest Available</label>
+            <input type="time" value="09:00" />
+          </div>
+          <div class="form-group">
+            <label>Latest Available</label>
+            <input type="time" value="17:00" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Short Bio <span style="font-weight:400;color:var(--text-muted)">(shown on your profile)</span></label>
+          <textarea placeholder="Briefly describe your background, courses you've taken, and how you can help fellow students…"></textarea>
+        </div>
+        <button type="submit" class="submit-btn">✅ Submit My Profile</button>
+      </form>
+    </div>
+  </div>
+</div><!-- end join -->
+
+
+<!-- ==================== ABOUT PAGE ==================== -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <div class="about-hero-inner">
+      <h1>About ISOM Data Lab<br/>@ Perdue School of Business</h1>
+      <p>A free, student-centered analytics support community — built within Salisbury University's Perdue School of Business to help every ISOM student thrive with data.</p>
+    </div>
+  </div>
+  <div class="su-stripe"></div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Our Mission</h2>
+      <p>We believe no Sea Gull student should be stuck on a coding problem alone.</p>
+    </div>
+    <div class="mission-grid">
+      <div class="mission-card">
+        <div class="mission-icon">🌱</div>
+        <h3>Accessible Learning</h3>
+        <p>Free coding support for every Perdue student, regardless of background or experience level.</p>
+      </div>
+      <div class="mission-card">
+        <div class="mission-icon">🔗</div>
+        <h3>Community Connections</h3>
+        <p>Building lasting relationships among Sea Gulls — students, seniors, and faculty — through shared knowledge.</p>
+      </div>
+      <div class="mission-card">
+        <div class="mission-icon">📊</div>
+        <h3>Analytics Excellence</h3>
+        <p>Elevating data literacy across the Perdue School of Business — one session at a time.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:white; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="section">
+      <div class="section-header">
+        <h2>Meet the Team</h2>
+        <p>Lab coordinators and founding faculty from the ISOM department at Perdue.</p>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,var(--maroon-dark),var(--maroon-light));">👨‍🏫</div>
+          <h4>Prof. Yuqi Peng</h4>
+          <div class="team-role">Lab Organizer · Asst. Professor, ISOM</div>
+          <p>Research in supply chain innovation &amp; sustainability. Brings Python coding into the classroom and champions peer analytics support at Perdue.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,var(--maroon),var(--maroon-light));">👨‍🏫</div>
+          <h4>Prof. Hoon Cha</h4>
+          <div class="team-role">Faculty · Professor, ISOM</div>
+          <p>Research in IT impacts, AI/VR adoption, and IT outsourcing. Former Samsung consultant. Published in MIS Quarterly and JMIS.</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,var(--accent),var(--gold));">👨‍🏫</div>
+          <h4>Prof. Minseok Park</h4>
+          <div class="team-role">Faculty · Assoc. Professor, ISOM</div>
+          <p>Teaches Data Mining (INFO 340) and Supply Chain Decision Making (INFO 602). Research in behavioral operations and supply chain analytics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="text-align:center;">
+    <div class="section-header">
+      <h2>Get Involved</h2>
+      <p>Whether you're looking for help or have expertise to share — the Sea Gull Data Lab community welcomes you.</p>
+    </div>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-maroon" onclick="showPage('supporters')">🔍 Book a Session</button>
+      <button class="btn btn-gold"   onclick="showPage('join')">✋ Join as Supporter</button>
+    </div>
+  </div>
+</div><!-- end about -->
+
+
+<!-- ==================== MY BOOKINGS PAGE ==================== -->
+<div id="page-bookings" class="page">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>My Bookings</h1>
+      <p>View and manage your upcoming sessions. Cancel any time up to 2 hours before.</p>
+    </div>
+  </div>
+  <div id="bookingsContent"></div>
+</div>
+
+<!-- ==================== BOOKING MODAL ==================== -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modalSupporterName">Book a Session</h2>
+        <p id="modalSupporterSub">Choose a time that works for you</p>
+        <div class="modal-header-gold"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" placeholder="Full name" />
+      </div>
+      <div class="form-group">
+        <label>Your SU Student Email</label>
+        <input type="email" placeholder="student@gulls.salisbury.edu" />
+      </div>
+      <div class="form-group">
+        <label>Topic / Tool</label>
+        <select>
+          <option>Python – Data Cleaning &amp; Pandas</option>
+          <option>Python – Visualization (Matplotlib / Seaborn)</option>
+          <option>R – Statistical Modeling</option>
+          <option>Stata – Regression &amp; Econometrics</option>
+          <option>Excel – Formulas &amp; Pivot Tables</option>
+          <option>Data Visualization – Tableau / Power BI</option>
+          <option>Other / General Help</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Select a Date</label>
+        <input type="date" id="dateInput" />
+      </div>
+      <div class="form-group">
+        <label>Available Time Slots</label>
+        <div class="time-slots">
+          <div class="time-slot" onclick="selectSlot(this)">9:00 AM</div>
+          <div class="time-slot" onclick="selectSlot(this)">9:30 AM</div>
+          <div class="time-slot unavailable">10:00 AM</div>
+          <div class="time-slot" onclick="selectSlot(this)">10:30 AM</div>
+          <div class="time-slot unavailable">11:00 AM</div>
+          <div class="time-slot" onclick="selectSlot(this)">11:30 AM</div>
+          <div class="time-slot" onclick="selectSlot(this)">2:00 PM</div>
+          <div class="time-slot" onclick="selectSlot(this)">2:30 PM</div>
+          <div class="time-slot unavailable">3:00 PM</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Session Format</label>
+        <select>
+          <option>In-Person (Perdue Hall – Lab Room 4B)</option>
+          <option>Zoom / Online</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Brief description of your issue <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+        <textarea placeholder="e.g. I'm getting a KeyError when merging DataFrames in pandas…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmBooking()">✅ Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== SUPPORTER DASHBOARD PAGE ==================== -->
+<div id="page-dashboard" class="page">
+  <div class="dashboard-header">
+    <div class="dashboard-header-inner">
+      <div class="dashboard-avatar" id="dashAvatar">👨‍🏫</div>
+      <div class="dashboard-title">
+        <h1 id="dashName">Welcome</h1>
+        <p id="dashEmail"></p>
+      </div>
+    </div>
+  </div>
+  <div class="su-stripe"></div>
+  <div class="dashboard-body">
+    <!-- LEFT: My Listing -->
+    <div>
+      <div class="dash-card">
+        <div class="dash-card-header">
+          My Listing
+          <span id="dashListingStatus" style="font-size:11px;font-weight:700;background:rgba(255,255,255,0.18);padding:2px 9px;border-radius:10px;">Active</span>
+        </div>
+        <div class="dash-card-body" id="dashProfileBody"></div>
+      </div>
+    </div>
+    <!-- RIGHT: Appointments -->
+    <div>
+      <div class="dash-card">
+        <div class="dash-card-header">
+          Incoming Appointments
+          <span id="dashApptCount" style="font-size:11px;background:var(--gold);color:var(--maroon);padding:2px 9px;border-radius:10px;font-weight:800;">0</span>
+        </div>
+        <div class="dash-card-body">
+          <div id="dashApptList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SUPPORTER LOGIN MODAL ==================== -->
+<div class="login-modal-overlay" id="loginModal">
+  <div class="login-modal">
+    <div class="login-header">
+      <div>
+        <h2>Supporter Portal</h2>
+        <p>Sign in with your Salisbury University email</p>
+      </div>
+      <button class="modal-close" onclick="closeSupporterLogin()">✕</button>
+    </div>
+    <div class="login-body">
+      <div class="login-error" id="loginError">No supporter account found for that email. Please check and try again.</div>
+      <div class="form-group">
+        <label>Your SU Email</label>
+        <input type="email" id="loginEmailInput" placeholder="e.g. yqpeng@salisbury.edu" onkeydown="if(event.key==='Enter') attemptLogin()" />
+      </div>
+      <button class="btn-login" onclick="attemptLogin()">Sign In →</button>
+      <div class="login-hint">
+        Not registered yet?
+        <span onclick="closeSupporterLogin(); showPage('join');" style="color:var(--maroon);font-weight:700;cursor:pointer;">Join as a Supporter</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CONFIRM DIALOG ==================== -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon" id="confirmIcon">⚠️</div>
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMsg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="btn-confirm-no"  onclick="closeConfirm()">No, keep it</button>
+      <button class="btn-confirm-yes" id="confirmYesBtn">Yes, remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="margin-bottom:6px;">
+    <span class="footer-gold">ISOM Data Lab @ Perdue School of Business</span>
+  </div>
+  Salisbury University · Department of Information Systems &amp; Operations Management<br/>
+  A free, non-profit peer analytics support initiative ·
+  <a href="mailto:yqpeng@salisbury.edu">yqpeng@salisbury.edu</a>
+</footer>
+
+
+<script>
+  // ── DATA ──────────────────────────────────────────────────────────
+  const supporters = [
+    {
+      id: 1, name: "Prof. Yuqi Peng", role: "faculty",
+      avatar: "👨‍🏫", initials: "YP",
+      email: "yqpeng@salisbury.edu",
+      bio: "Assistant Professor of ISOM at Perdue School. Research focuses on supply chain innovation and sustainability. Teaches Python-based data analysis in class — walks through code with students hands-on.",
+      tags: ["python","viz"],
+      avail: "By appointment · PH 339",
+      slots: "Contact to schedule"
+    },
+    {
+      id: 2, name: "Prof. Hoon Cha", role: "faculty",
+      avatar: "👨‍🏫", initials: "HC",
+      email: "hscha@salisbury.edu",
+      bio: "Professor of ISOM with expertise in IT impacts on business processes, AI/VR adoption, and IT outsourcing. Former Samsung IT consultant. Published in MIS Quarterly and JMIS.",
+      tags: ["excel","python"],
+      avail: "By appointment · Perdue Hall",
+      slots: "Contact to schedule"
+    },
+    {
+      id: 3, name: "Prof. Minseok Park", role: "faculty",
+      avatar: "👨‍🏫", initials: "MP",
+      email: "mspark@salisbury.edu",
+      bio: "Associate Professor of ISOM. Teaches Data Mining for Business Intelligence (INFO 340) and Decision Making in Supply Chain (INFO 602). Specializes in statistical modeling and supply chain analytics.",
+      tags: ["r","stata","viz"],
+      avail: "By appointment · Perdue Hall",
+      slots: "Contact to schedule"
+    },
+    {
+      id: 4, name: "Prof. Gene Hahn", role: "faculty",
+      avatar: "👨‍🏫", initials: "GH",
+      email: "edhahn@salisbury.edu",
+      bio: "Professor of ISOM specializing in Bayesian methods, business statistics, and international operations. Teaches Operations Management and Business Statistics. Founded the SU Innovation Lab.",
+      tags: ["excel","r"],
+      avail: "By appointment · PH 335",
+      slots: "Contact to schedule"
+    },
+    {
+      id: 5, name: "Prof. Steve Essi", role: "faculty",
+      avatar: "👨‍🏫", initials: "SE",
+      email: "saessi@salisbury.edu",
+      bio: "Assistant Professor of ISOM. PhD from Virginia Commonwealth University. Teaches Global Information Systems Management (INFO 465). Focuses on enterprise systems and global IS strategy.",
+      tags: ["python","excel"],
+      avail: "By appointment · PH 331",
+      slots: "Contact to schedule"
+    },
+    {
+      id: 6, name: "Senior Student (You?)", role: "senior",
+      avatar: "⭐", initials: "??",
+      email: "",
+      bio: "This spot is open for a senior undergraduate or graduate student with strong analytics skills. If you're comfortable with Excel, Python, R, or Stata — consider joining as a peer supporter!",
+      tags: ["excel","python","r","viz"],
+      avail: "Flexible",
+      slots: "Join the lab →"
+    },
+  ];
+
+  const tagLabels = {
+    excel:  { label: "Excel",          cls: "tag-excel"  },
+    python: { label: "Python",         cls: "tag-python" },
+    r:      { label: "R",              cls: "tag-r"      },
+    stata:  { label: "Stata",         cls: "tag-stata"  },
+    viz:    { label: "Visualization",  cls: "tag-viz"    },
+    ml:     { label: "ML",             cls: "tag-ml"     }
+  };
+
+  // ── PAGE ROUTING ────────────────────────────────────────────────
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (id === 'supporters') renderSupporters('all');
+    if (id === 'bookings')   renderBookings();
+    if (id === 'dashboard')  renderDashboard();
+  }
+
+  function filterAndShow(topic) {
+    showPage('supporters');
+    setTimeout(() => filterSupporters(topic, null), 50);
+  }
+
+  // ── SUPPORTERS ──────────────────────────────────────────────────
+  function renderSupporters(filter) {
+    const grid = document.getElementById('supporterGrid');
+    const filtered = filter === 'all' ? supporters : supporters.filter(s => s.tags.includes(filter));
+    grid.innerHTML = filtered.map(s => {
+      const isPlaceholder = s.id === 6;
+      const btnHtml = isPlaceholder
+        ? `<button class="btn-book" style="background:var(--gold);color:var(--maroon);" onclick="showPage('join')">✋ Join as a Supporter</button>`
+        : `<button class="btn-book" onclick="openBookModal('${s.name}','${s.role}')">📅 Book a Session</button>`;
+      return `
+      <div class="supporter-card" style="${isPlaceholder ? 'border:2px dashed var(--gold); background: var(--gold-pale);' : ''}">
+        <div class="supporter-head">
+          <div class="avatar ${s.role === 'faculty' ? 'avatar-faculty' : 'avatar-senior'}" ${isPlaceholder ? 'style="background:linear-gradient(135deg,var(--gold),var(--accent));font-size:26px;"' : ''}>${s.avatar}</div>
+          <div>
+            <div class="supporter-name" style="${isPlaceholder ? 'color:var(--accent);' : ''}">${s.name}</div>
+            <span class="supporter-role ${s.role === 'faculty' ? 'role-faculty' : 'role-senior'}">
+              ${s.role === 'faculty' ? '🎓 Perdue Faculty' : '⭐ Senior Student'}
+            </span>
+          </div>
+        </div>
+        <div class="supporter-bio">${s.bio}</div>
+        <div class="supporter-tags">
+          ${s.tags.map(t => `<span class="tag ${tagLabels[t]?.cls}">${tagLabels[t]?.label || t}</span>`).join('')}
+        </div>
+        <div class="availability-row">
+          <div class="avail-dot" style="${isPlaceholder ? 'background:var(--gold);' : ''}"></div>
+          <div class="availability-text"><strong style="${isPlaceholder ? 'color:var(--accent);' : ''}">${s.slots}</strong> · ${s.avail}</div>
+        </div>
+        ${btnHtml}
+      </div>
+    `}).join('');
+  }
+
+  function filterSupporters(filter, btn) {
+    document.querySelectorAll('#filterBar .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) {
+      btn.classList.add('active');
+    } else {
+      const allBtns = document.querySelectorAll('#filterBar .filter-btn');
+      if (filter === 'all') { allBtns[0].classList.add('active'); }
+      else {
+        allBtns.forEach(b => {
+          if (b.classList.contains('tag-' + filter)) b.classList.add('active');
+        });
+      }
+    }
+    renderSupporters(filter);
+  }
+
+  // ── APPOINTMENTS ─────────────────────────────────────────────────
+  let appointments = [];
+  let currentBookingSupporter = '';
+
+  // ── BOOKING MODAL ────────────────────────────────────────────────
+  const modalBodyTemplate = document.getElementById('modalBody').innerHTML;
+
+  function openBookModal(name, role) {
+    currentBookingSupporter = name;
+    document.getElementById('modalSupporterName').textContent = 'Book with ' + name;
+    document.getElementById('modalSupporterSub').textContent =
+      (role === 'faculty' ? 'Perdue Faculty Mentor' : 'Senior Student') + ' · Choose a time that works for you';
+    document.getElementById('modalBody').innerHTML = modalBodyTemplate;
+    document.querySelector('.modal-footer').innerHTML =
+      `<button class="btn-cancel" onclick="closeModal()">Cancel</button>
+       <button class="btn-confirm" onclick="confirmBooking()">✅ Confirm Booking</button>`;
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateInput').value = today;
+    document.getElementById('bookModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('bookModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('bookModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function selectSlot(el) {
+    if (el.classList.contains('unavailable')) return;
+    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function confirmBooking() {
+    const dateVal  = document.getElementById('dateInput')?.value || '';
+    const selected = document.querySelector('.time-slot.selected');
+    const timeVal  = selected ? selected.textContent.trim() : 'Time TBD';
+    const topicEl  = document.querySelector('#modalBody select');
+    const topicVal = topicEl ? topicEl.value : 'General Help';
+    const formatEl = document.querySelectorAll('#modalBody select')[1];
+    const formatVal = formatEl ? formatEl.value : 'TBD';
+
+    const appt = {
+      id: Date.now(),
+      supporter: currentBookingSupporter,
+      topic: topicVal,
+      date: dateVal,
+      time: timeVal,
+      format: formatVal,
+      status: 'confirmed'
+    };
+    appointments.push(appt);
+    updateBookingBadge();
+
+    document.getElementById('modalBody').innerHTML = `
+      <div class="success-card">
+        <div class="success-icon">🎉</div>
+        <h3>Booking Confirmed!</h3>
+        <p>Your session with <strong>${appt.supporter}</strong> on <strong>${appt.date || 'your selected date'}</strong> at <strong>${appt.time}</strong> has been booked.</p>
+        <p style="margin-top:10px;font-size:13px;color:var(--text-muted);">
+          You can withdraw this appointment anytime from <strong>My Bookings</strong>.
+        </p>
+      </div>`;
+    document.querySelector('.modal-footer').innerHTML =
+      `<button class="btn-cancel" onclick="closeModal()">Close</button>
+       <button class="btn-confirm" onclick="closeModal(); showPage('bookings');">📋 View My Bookings</button>`;
+  }
+
+  function updateBookingBadge() {
+    const active = appointments.filter(a => a.status === 'confirmed').length;
+    const badge = document.getElementById('navBookingCount');
+    if (active > 0) { badge.textContent = active; badge.style.display = 'inline'; }
+    else { badge.style.display = 'none'; }
+  }
+
+  // ── MY BOOKINGS ───────────────────────────────────────────────────
+  function renderBookings() {
+    const container = document.getElementById('bookingsContent');
+    if (appointments.length === 0) {
+      container.innerHTML = `
+        <div class="bookings-empty">
+          <div class="empty-icon">📭</div>
+          <p>You have no bookings yet.</p>
+          <button class="btn btn-maroon" onclick="showPage('supporters')">🔍 Find a Supporter</button>
+        </div>`;
+      return;
+    }
+    container.innerHTML = `<div class="bookings-list">` +
+      appointments.map(a => `
+        <div class="booking-item" id="appt-${a.id}">
+          <div class="booking-info">
+            <div class="booking-supporter">📅 ${a.supporter}</div>
+            <div class="booking-meta">
+              <span>🗓 ${a.date || '—'}</span>
+              <span>⏰ ${a.time}</span>
+              <span>📍 ${a.format}</span>
+            </div>
+            <div class="booking-meta" style="margin-top:2px;">🎯 ${a.topic}</div>
+            <div class="booking-status ${a.status === 'cancelled' ? 'cancelled' : ''}">
+              ${a.status === 'confirmed' ? '✅ Confirmed' : '❌ Withdrawn'}
+            </div>
+          </div>
+          ${a.status === 'confirmed'
+            ? `<button class="btn-withdraw" onclick="withdrawAppointment(${a.id})">✕ Withdraw</button>`
+            : `<button class="btn-withdraw" disabled>Withdrawn</button>`}
+        </div>`).join('') +
+      `</div>`;
+  }
+
+  function withdrawAppointment(id) {
+    openConfirm(
+      '🗓', 'Withdraw Appointment?',
+      'Are you sure you want to cancel this session? This action cannot be undone.',
+      'Yes, withdraw',
+      () => {
+        const appt = appointments.find(a => a.id === id);
+        if (appt) appt.status = 'cancelled';
+        updateBookingBadge();
+        renderBookings();
+      }
+    );
+  }
+
+  // ── SUPPORTER SESSION ────────────────────────────────────────────
+  let currentSupporter = null; // the logged-in supporter object (or null)
+
+  function openSupporterLogin() {
+    document.getElementById('loginEmailInput').value = '';
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('loginModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('loginEmailInput').focus(), 100);
+  }
+
+  function closeSupporterLogin() {
+    document.getElementById('loginModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('loginModal').addEventListener('click', function(e) {
+    if (e.target === this) closeSupporterLogin();
+  });
+
+  function attemptLogin() {
+    const email = document.getElementById('loginEmailInput').value.trim().toLowerCase();
+    const match = supporters.find(s => s.email && s.email.toLowerCase() === email);
+    if (!match) {
+      document.getElementById('loginError').classList.add('show');
+      return;
+    }
+    currentSupporter = match;
+    closeSupporterLogin();
+    setNavLoggedIn(true);
+    showPage('dashboard');
+  }
+
+  function logoutSupporter() {
+    currentSupporter = null;
+    setNavLoggedIn(false);
+    showPage('home');
+  }
+
+  function setNavLoggedIn(loggedIn) {
+    document.getElementById('nav-portal').style.display   = loggedIn ? 'none'         : '';
+    document.getElementById('nav-join').style.display     = loggedIn ? 'none'         : '';
+    document.getElementById('nav-dashboard').style.display = loggedIn ? ''            : 'none';
+    document.getElementById('nav-logout').style.display   = loggedIn ? ''             : 'none';
+  }
+
+  // ── SUPPORTER DASHBOARD ──────────────────────────────────────────
+  function renderDashboard() {
+    if (!currentSupporter) { showPage('home'); return; }
+    const s = currentSupporter;
+    document.getElementById('dashAvatar').textContent = s.avatar;
+    document.getElementById('dashName').textContent   = 'Welcome, ' + s.name;
+    document.getElementById('dashEmail').textContent  = s.email + ' · ' + (s.role === 'faculty' ? 'Perdue Faculty' : 'Senior Student');
+
+    // Profile preview
+    const listed = supporters.find(x => x.id === s.id);
+    const profileHtml = listed ? `
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${s.bio}</div>
+      <div class="supporter-tags profile-preview">
+        ${s.tags.map(t => `<span class="tag ${tagLabels[t]?.cls}">${tagLabels[t]?.label||t}</span>`).join('')}
+      </div>
+      <div class="avail-row" style="font-size:13px;color:var(--text-muted);margin:10px 0;">📍 ${s.avail}</div>
+      <button class="btn-remove-listing" onclick="removeMyListing()">✕ Remove my listing</button>
+    ` : `<div class="dash-empty"><div class="dash-empty-icon">🚫</div><p>Your listing has been removed.</p></div>`;
+    document.getElementById('dashProfileBody').innerHTML = profileHtml;
+
+    // Incoming appointments (booked with this supporter)
+    const mine = appointments.filter(a => a.supporter === s.name);
+    document.getElementById('dashApptCount').textContent = mine.filter(a => a.status === 'confirmed').length;
+    const apptHtml = mine.length === 0
+      ? `<div class="dash-empty"><div class="dash-empty-icon">📭</div><p>No appointments yet. Students will appear here once they book with you.</p></div>`
+      : mine.map(a => `
+        <div class="dash-appt-item">
+          <div class="dash-appt-supporter">🎓 Student Session</div>
+          <div class="dash-appt-meta">
+            🎯 ${a.topic}<br/>
+            🗓 ${a.date || '—'} &nbsp; ⏰ ${a.time} &nbsp; 📍 ${a.format}
+          </div>
+          <span class="dash-appt-status ${a.status}">${a.status === 'confirmed' ? '✅ Confirmed' : '❌ Withdrawn by student'}</span>
+        </div>`).join('');
+    document.getElementById('dashApptList').innerHTML = apptHtml;
+  }
+
+  // ── SUPPORTER REMOVAL (dashboard only) ──────────────────────────
+  function removeMyListing() {
+    openConfirm(
+      '👤', 'Remove Your Listing?',
+      'Your profile will no longer appear in the public supporter list. Students will not be able to book new sessions with you.',
+      'Yes, remove my listing',
+      () => {
+        const idx = supporters.findIndex(s => s.id === currentSupporter.id);
+        if (idx !== -1) supporters.splice(idx, 1);
+        // Update faculty count badge
+        const count = supporters.filter(s => s.role === 'faculty').length;
+        const el = document.getElementById('facultyCount');
+        if (el) el.innerHTML = `${count}<span>+</span>`;
+        renderDashboard(); // refresh dashboard to show "removed" state
+      }
+    );
+  }
+
+  // ── CONFIRM DIALOG ────────────────────────────────────────────────
+  let confirmCallback = null;
+
+  function openConfirm(icon, title, msg, yesLabel, callback) {
+    document.getElementById('confirmIcon').textContent = icon;
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent = msg;
+    document.getElementById('confirmYesBtn').textContent = yesLabel;
+    confirmCallback = callback;
+    document.getElementById('confirmOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    confirmCallback = null;
+  }
+
+  document.getElementById('confirmYesBtn').addEventListener('click', () => {
+    if (confirmCallback) confirmCallback();
+    closeConfirm();
+  });
+
+  document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+  });
+
+  // ── JOIN FORM ────────────────────────────────────────────────────
+  function toggleDay(el) { el.classList.toggle('active'); }
+
+  function submitJoin(e) {
+    e.preventDefault();
+    document.getElementById('joinFormContainer').innerHTML = `
+      <div style="text-align:center; padding:60px 28px;">
+        <div style="font-size:64px; margin-bottom:16px;">🙌</div>
+        <h3 style="font-size:24px; font-weight:800; color:var(--maroon); margin-bottom:10px;">Application Received!</h3>
+        <p style="color:var(--text-muted); font-size:15px; line-height:1.65;">
+          Thank you for joining the Sea Gull Data Lab! The ISOM Lab Coordinator will review your profile and send you an onboarding email within 1–2 business days.
+        </p>
+        <button class="btn btn-gold" style="margin-top:24px;" onclick="showPage('home')">Return to Home</button>
+      </div>
+    `;
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────────
+  renderSupporters('all');
+
+  // Dynamic faculty count — excludes the placeholder "Join" card
+  const facultyCount = supporters.filter(s => s.role === 'faculty').length;
+  const el = document.getElementById('facultyCount');
+  if (el) el.innerHTML = `${facultyCount}<span>+</span>`;
+</script>
+</body>
+</html>
